@@ -3,18 +3,32 @@ Winter 2026 AI Development Training Series
 
 This course was developed in partnership between the University of Chicago's [Career Advancement Office](https://careeradvancement.uchicago.edu/) and the University of Chicago's [Data Science Institute](https://datascience.uchicago.edu/).
 
-# The work below is incomplete -- the final course will be coming soon!
-
 
 ## Workshop: AI Development (4-part series)
 
 This repository contains materials for a four-part workshop on AI development for advanced undergraduates (3rd/4th year).
 
 ### Lecture 1 (slides-first)
-- **Topic**: LLMs, agents, tools, and MCP concepts (plus costing/MLOps discussion)
-- **Slides**: `lecture_1/slides/lecture_1.tex`
+- **Topic**: Foundations
+- **Slides**: `lecture_1/slides/lecture_1.pdf`
 
-> Lecture 1 content is adapted from Nick Ross's course notes on LLMs/agents/MCP: `https://raw.githubusercontent.com/NickRoss/2025-Data-24100/main/class_notes/16_llms_agents_mcp.md`
+
+- **Readings for lecture 2**:
+  - **Context Engineering** 
+    - [Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - Anthropic's guide to designing context windows for reliable agent behavior.
+    - [Context Engineering](https://simonwillison.net/2025/Jun/27/context-engineering/) - Simon Willison's take.
+    - [Agent Best Practices](https://cursor.com/blog/agent-best-practices) - Cursor's guide to context engineering.
+
+  - [Welcome to Gas Town](https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04) - LONG, only read as long as you are interested!
+  
+  - **Gary Marcus on AI Limitations** 
+    - [Why ChatGPT Can't Be Trusted With](https://garymarcus.substack.com/p/why-chatgpt-cant-be-trusted-with) - Discussion of reliability issues and when not to trust LLM outputs.
+    - [Breaking: Marcus Weighs In, Mostly](https://garymarcus.substack.com/p/breaking-marcus-weighs-in-mostly) - Critical analysis of AI capabilities and limitations.
+    - [Let's Be Honest: Generative AI Isn't](https://garymarcus.substack.com/p/lets-be-honest-generative-ai-isnt) - Perspective on what generative AI can and cannot do reliably.
+  
+
+## Under Construction below!
+
 
 ### Lecture 2 (HITL + evaluation)
 - **Problem**: Marketing automation / outreach drafting with compliance

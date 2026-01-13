@@ -4,8 +4,16 @@
 \usepackage{tikz}
 \usetikzlibrary{calc}
 
+% --- Organization slides (TOC + section dividers) ---
+\AtBeginSection[]
+{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
 \title{DSI: AI Development Program}
-\subtitle{Part 1: Introduction to AI }
+\subtitle{Part 1: Introduction to AI Development}
 \author{University of Chicago}
 \date{\today}
 
@@ -13,17 +21,13 @@
 
 \frame{\titlepage}
 
-% Basics of building AI Systems
-\section{Introduction and Overview}
-
-\begin{frame}
-	\begin{itemize}
-		\item Who am I
-		\item Learning Objectives
-        \item Basics and Terminology
-        \item Basics of Building		
-	\end{itemize}
+% Global outline (matches \section{} titles)
+\begin{frame}{Outline}
+  \tableofcontents
 \end{frame}
+
+% Basics of building AI Systems
+\section*{Introduction and Overview}
 
 
 \begin{frame}{Who am I}
@@ -31,6 +35,7 @@
 \item Director Data Science Clinic
 \item Undergrad: UC Berkeley, PhD: UCLA
 \item Worked in Consulting, Video Games, AI
+\item I'm also an investor and consultant for AI Startups.
 \end{itemize}
 \end{frame}
 
@@ -94,15 +99,92 @@
   
 \end{tikzpicture}
 \end{frame}
-    
 
+\section{Motivation and Learning Objectives}
 
-
-
-\section{Part 1: Large Language Models (LLMs)}
-
-\begin{frame}{What is an LLM?}
+\begin{frame}{Motivation: Why AI Development?}
 \begin{itemize}
+    \item AI can be used directly through chat interfaces (ChatGPT, Claude)
+    \item However, most production AI systems are built \textbf{programmatically} through APIs
+    \item Why?
+    \begin{enumerate}
+        \item \textbf{Control}: Cost management, output formatting, verification
+        \item \textbf{Integration}: Connect AI to existing systems (databases, CRMs, APIs)
+        \item \textbf{Human Oversight}: Code provides guardrails against hallucination
+        \item \textbf{Automation}: Scale beyond manual chat interactions
+        \item \textbf{Scalability}: Building systems that can scale beyond a one-to-one human-chat.
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Personalized Marketing Outreach}
+\begin{itemize}
+    \item A company wants to use their CRM system to send personalized cold outreach emails
+    \item They need to write code to:
+    \begin{itemize}
+        \item Connect to their CRM database
+        \item Retrieve prospect information
+        \item Generate personalized emails using an LLM API
+        \item Send emails through their email system
+    \end{itemize}
+    \item This requires \textbf{programmatic integration}, not just chat interfaces
+    \item This is a concrete example of why we build AI systems programmatically
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Course Learning Objectives}
+By the end of this course, you will:
+\begin{enumerate}
+    \item \textbf{Understand AI terminology}
+    \begin{itemize}
+        \item Don't make an ass out of yourself during an interview
+        \item Speak confidently about LLMs, tokens, context windows, agents, tools
+    \end{itemize}
+    \item \textbf{Gain familiarity with cost drivers}
+    \begin{itemize}
+        \item Understand what makes ROI sense and what doesn't
+        \item Calculate and optimize token costs
+    \end{itemize}
+    \item \textbf{Experience building AI systems}
+    \begin{itemize}
+        \item Have concrete experiences to talk about in interviews
+        \item Tune and optimize real systems
+        \item Understand the trade-offs in building such systems
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Today: Workshop 1}
+\begin{itemize}
+    \item Focus on the \textbf{basic} definitions and how to work with these models
+    \item Build foundation for hands-on work
+    \item About 1 hour of lecture, 30 minutes hands on
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Next lectures}:
+\begin{itemize}
+    \item Workshop 2 - 4: Specific Implementation that highlight concrete problems
+    \item Dates: Thursday (1/15), Monday (1/26) and Tuesday (1/27)
+    \item Workshops will be 30-ish minutes of lecture followed by 1 hour of hands on time
+    \item Between each lecture there will be a set of readings (usually articles)
+\end{itemize}
+\end{frame}
+
+\section{Foundations \& Terminology}
+
+\begin{frame}{So what is AI?}
+\begin{center}
+\Large
+When people say ``AI'' today, they usually mean \textbf{Large Language Models (LLMs)} or \textbf{Foundation Model}
+\end{center}
+\vspace{1cm}
+... So what is an LLM / Foundation Model?
+\end{frame}
+
+\begin{frame}{Lets start with LLMs!}
+\begin{itemize}
+
     \item A \textbf{Large Language Model (LLM)} is an artificial intelligence system trained on massive amounts of text data (often trillions of words)
     \item These models learn patterns in language and can:
     \begin{itemize}
@@ -115,11 +197,26 @@
     \end{itemize}
     \item Think of an LLM as a very sophisticated autocomplete system that has read a significant portion of the internet
 \end{itemize}
+\vspace{0.3cm}
+\end{frame}
+
+\begin{frame}{LLM Mental Model: Simplified}
+\begin{center}
+\begin{center}
+\IfFileExists{images/LLMProcess.jpg}{\includegraphics[width=0.7\textwidth]{images/LLMProcess.jpg}}{}
+\end{center}
+
+\end{center}
+\vspace{0.5cm}
+\footnotesize We won't dive into the specifics of how this works, but this mental model is useful for understanding cost and performance.
 \end{frame}
 
 \begin{frame}{Foundation Models}
 \begin{itemize}
-    \item A \textbf{foundation model} is a large-scale machine learning model trained on broad data (generally using self-supervision at scale) that can be adapted to a wide range of downstream tasks
+	
+	\item What about images and text?
+
+    \item A \textbf{foundation model} is a large-scale machine learning model trained on broad data 
     \item \textbf{Key characteristics:}
     \begin{itemize}
         \item Broad training: Trained on diverse, large-scale datasets
@@ -132,153 +229,202 @@
 
 \begin{frame}{Foundation Models vs LLMs}
 \begin{itemize}
-    \item \textbf{Foundation Model} is the broader category—it includes models for vision, audio, code, etc.
-    \item \textbf{LLM (Large Language Model)} is a type of foundation model focused specifically on language
-    \item \textbf{Examples of foundation models:}
+    \item \textbf{Foundation Model} is the broader category
     \begin{itemize}
-        \item \textbf{Language}: GPT-4, Claude, Llama (these are LLMs)
-        \item \textbf{Vision}: CLIP, DALL-E
-        \item \textbf{Code}: Codex, CodeLlama
-        \item \textbf{Multimodal}: GPT-4V (vision + language), Gemini (multimodal)
+        \item Can handle multiple modalities (text, images, audio, video)
+        \item Often called ``multimodal models''
     \end{itemize}
+    \item \textbf{LLM} (should) specifically refers to language models
+    \item \textbf{Colloquially}: People often say ``LLM'' to mean ``foundation model''
+    \item They operate the same way (embedding $\rightarrow$ transformation $\rightarrow$ output)
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Examples of foundation models:}
+\begin{itemize}
+    \item \textbf{Language}: GPT-4, Claude, Llama (these are LLMs)
+    \item \textbf{Vision}: CLIP, DALL-E
+    \item \textbf{Multimodal}: GPT-4V (vision + language), Gemini
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Key Terminology}
 \begin{itemize}
-    \item \textbf{Foundation Model}: A large-scale model trained on broad data that can be adapted to many tasks
-    \item \textbf{LLM (Large Language Model)}: A type of foundation model specifically designed for language tasks
     \item \textbf{Token}: The basic unit of text that an LLM processes (word, part of word, or punctuation)
+\begin{itemize}
+\item  1 token $\approx$ .75 words (so a bit less than a word
+\end{itemize}
     \item \textbf{Prompt}: The input text you give to an LLM
     \item \textbf{Completion/Response}: The output text generated by the LLM
-    \item \textbf{Context Window}: The maximum number of tokens an LLM can process in a single conversation
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Key Terminology (continued)}
+
+\begin{frame}{How Do We Use These Models?}
+\begin{enumerate}
+    \item \textbf{Chat Interfaces}: ChatGPT, Claude, Gemini
+    \begin{itemize}
+        \item Direct user interaction
+        \item Good for exploration and prototyping
+    \end{itemize}
+    \item \textbf{Terminal Interfaces}: Claude Code CLI, Open AI Codex, OpenCode
+    \begin{itemize}
+        \item Command-line access
+        \item Integration with development workflows
+    \end{itemize}
+    \item \textbf{API (Application Programming Interface)}
+    \begin{itemize}
+        \item \textbf{This is our focus} - programmatic access
+        \item Build production systems
+        \item Integrate with existing applications
+    \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{LLM Limitations}
+While LLMs are powerful, they have important limitations:
+\begin{enumerate}
+    \item \textbf{Knowledge Cutoff}: They only know information from their training data up to a certain date
+    \item \textbf{Hallucination}: They can generate plausible-sounding but incorrect information
+    \item \textbf{No Real-World Actions}: They can't directly interact with external systems (databases, APIs, file systems)
+    \item \textbf{Context Limits}: They have maximum context window sizes
+    \item \textbf{Static Knowledge}: They can't learn new information after training without fine-tuning or retrieval
+\end{enumerate}
+\end{frame}
+
+
+
+\section{Context}
+
+\begin{frame}{Content Engineering: The Core of AI System Development}
 \begin{itemize}
-    \item \textbf{Temperature}: A parameter that controls randomness (Lower = more deterministic, Higher = more creative)
-    \item \textbf{Fine-tuning}: Training an LLM on specific data to improve performance on particular tasks
-    \item \textbf{Inference}: The process of generating text from an LLM (as opposed to training)
+    \item Most of what we do when programming AI systems is \textbf{engineering what goes into the model}
+    \item We call this \textbf{content engineering} (or \textbf{context engineering})
+    \item It focuses on manipulating the \textbf{context window} to generate responses that are most likely to succeed
+    \item This is where the real work happens:
+    \begin{itemize}
+        \item Designing effective prompts
+        \item Structuring information for the model
+        \item Providing the right examples and constraints
+        \item Managing context size and relevance
+    \end{itemize}
+    \item \textbf{The model is powerful, but what you put in determines what you get out}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Context windows: what they are (and why you care)}
+\begin{frame}{Context windows: What they are}
 \begin{itemize}
     \item The \textbf{context window} is the model's working memory for a single request
-    \item Everything the model can use must fit inside it:
-    \begin{itemize}
-        \item system prompt + developer instructions
-        \item user messages
-        \item tool outputs / retrieved documents
-        \item the model's own previous messages (in chat)
-    \end{itemize}
+    \item Everything the model can use must fit inside it
     \item When you exceed the window, something gets dropped or truncated
+	\begin{itemize}
+		\item Some tools will do automatic context window management (compacting, etc), but the trade-offs remain
+	\end{itemize}
+	\item So how big are these context windows?
 \end{itemize}
 \end{frame}
+
+\begin{frame}{Context Window Size Limitations}
+\begin{itemize}
+    \item Different models have different maximum context window sizes (measured in \textbf{tokens})
+    \item Common model context windows (as of 2024-2025):
+    \begin{itemize}
+        \item \textbf{GPT-4}: 128,000 tokens
+        \item \textbf{Claude 3.5 Sonnet}: 200,000 tokens
+        \item \textbf{Claude Sonnet 4}: 1,000,000 tokens (announced 2025)
+        \item \textbf{Llama 3.1} (70B, 405B): 128,000 tokens
+    \end{itemize}
+    \item \textbf{Remember}: 1 token $\approx$ 0.75 words
+    \item Larger context windows enable:
+    \begin{itemize}
+        \item Processing longer documents
+        \item Maintaining longer conversation history
+        \item Including more retrieved information
+    \end{itemize}
+    \item But they also increase cost and latency
+\end{itemize}
+\end{frame}
+
+
 
 \begin{frame}{Context windows: practical implications}
 \begin{itemize}
-    \item \textbf{Tradeoffs}: more context can improve grounding, but increases cost/latency
-    \item \textbf{Recency and placement matter}: newer text is usually attended to more
+    \item \textbf{Tradeoffs}: More context can improve grounding, but increases cost/latency
+    \item \textbf{Recency and placement matter}: Newer text is usually attended to more
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Breaking Down the Context Window}
+\begin{itemize}
+    \item For commercial LLMs, we context window can be broken into 3 components
+    \begin{enumerate}
+        \item \textbf{System Prompt}: High-level instructions \& safety rules
+        \item \textbf{User Prompt}: The actual request or question
+        \item \textbf{Environment Context}: Retrieved documents, tool outputs, conversation history
+    \end{enumerate}
+        \item Understanding this breakdown helps with:
+    \begin{itemize}
+        \item Cost optimization (what's necessary vs. optional)
+        \item Prompt design (where to put different types of instructions)
+        \item Debugging (what the model actually sees)
+    \end{itemize}
+
+\end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}{System Prompt}
+\begin{itemize}
+	\item The \textbf{system prompt} is separate from the user prompt and sets the model's behavior
+    \item The \textbf{system prompt} sets the highest-level behavior (tone, rules, safety, format)    
+	\item It is NOT under our control
+	\item It can be changed without us noticing or warning
+\end{itemize}
+\vspace{0.2cm}
+\footnotesize See example system prompts: \url{https://github.com/guy915/System-Prompts}
+
+\end{frame}
+
+
+\begin{frame}{Environment Context}
+\begin{itemize}
+	\item We can add additional features to our context window to give "abilities" to our LLM
+	\item For example: we could add a tool that would allow our LLM to browse our hard drive (in the case of local Claude code)
+	\item There are a lot of different patterns for this:
+\begin{itemize}
+\item MCP
+\item Skills
+\item Tools
+\item \texttt{AGENTS.md} files
+\end{itemize}
+\item Anything programmatically accessible that helps the model understand the environment, task, or user's situation
+\item These are generally put into the context window one time and then always exist when starting up.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{User Prompt}
+	\begin{itemize}
+		\item The \textbf{User Prompt} or \textbf{User Messages} is what we provide the LLM
+		\item This is our most common interaction point
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Context Failure}
+\begin{itemize}
+	\item When LLMs fail it is (frequently) due to problems by incorrectly engineered context. 
     \item \textbf{Failure modes} to watch for:
     \begin{itemize}
         \item forgetting earlier constraints
         \item losing critical details due to truncation
         \item quoting the wrong source when too many docs are included
     \end{itemize}
-\end{itemize}
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{System prompts: role and best practices}
-\begin{itemize}
-    \item The \textbf{system prompt} sets the highest-level behavior (tone, rules, safety, format)
-    \item Use it to encode \textbf{non-negotiables}:
-    \begin{itemize}
-        \item output format requirements (e.g., JSON only)
-        \item refusal and safety rules
-        \item grounding requirements (cite sources; do not invent facts)
-    \end{itemize}
-    \item Keep it \textbf{short, explicit, testable}; avoid vague goals like ``be helpful''
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Context engineering (a.k.a. make the model successful)}
-\begin{itemize}
-    \item \textbf{Context engineering} = designing what goes into the context window so the model can reliably do the task
-    \item Common building blocks:
-    \begin{itemize}
-        \item task definition + success criteria
-        \item constraints and policies (what is allowed/not allowed)
-        \item examples (few-shot) and edge cases
-        \item retrieved evidence (RAG) with citations
-        \item tool schemas for structured interaction with code
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{A simple context template (recommended)}
-\begin{enumerate}
-    \item \textbf{System}: rules, safety, output format
-    \item \textbf{Developer}: task-specific policies (what to do, what not to do)
-    \item \textbf{User}: the request + required inputs
-    \item \textbf{Evidence}: only the relevant retrieved snippets (not entire documents)
-    \item \textbf{Tools}: schemas + allowed actions
-    \item \textbf{Final}: ``Return JSON only'' / ``Cite sources'' / ``Ask clarifying questions if needed''
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{Example LLM Models: Commercial}
-\begin{itemize}
-    \item \textbf{GPT-4} (OpenAI)
-    \begin{itemize}
-        \item One of the most capable models
-        \item Available via OpenAI API
-        \item Powers ChatGPT Plus
-    \end{itemize}
-    \item \textbf{Claude 3.5 Sonnet} (Anthropic)
-    \begin{itemize}
-        \item Strong reasoning and coding capabilities
-        \item Available via Anthropic API
-    \end{itemize}
-    \item \textbf{Gemini Pro} (Google)
-    \begin{itemize}
-        \item Google's flagship model
-        \item Available via Google AI Studio
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Example LLM Models: Open Source}
-\begin{itemize}
-    \item \textbf{Hugging Face} is a platform hosting thousands of open-source models
-    \item Popular models include:
-    \begin{itemize}
-        \item \textbf{Llama 3} (Meta)
-        \item \textbf{Mistral} (Mistral AI)
-        \item \textbf{Phi} (Microsoft)
-        \item \textbf{Gemma} (Google)
-    \end{itemize}
-    \item You can use these models via:
-    \begin{itemize}
-        \item Hugging Face Transformers library (Python)
-        \item Hugging Face Inference API
-        \item Local deployment
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Model Aggregators}
-\begin{itemize}
-    \item \textbf{Open Router} provides access to many models through a single API
-    \begin{itemize}
-        \item Unified API for 100+ models
-        \item Compare models side-by-side
-        \item Pay-per-use pricing
-        \item Easy to switch between models
-    \end{itemize}
-\end{itemize}
-\end{frame}
+\section{Pricing}
 
 \begin{frame}{Token economics: why tokens matter}
 \begin{itemize}
@@ -288,15 +434,37 @@
         \item \textbf{output tokens} (the model's response)
     \end{itemize}
     \item Cost and latency generally scale with total tokens processed
-    \item \textbf{Context engineering is cost engineering}:
+    \item \textbf{Context engineering is also cost engineering}:
     \begin{itemize}
         \item tighter prompts $\rightarrow$ lower cost and often higher reliability
         \item smaller context when possible $\rightarrow$ faster, cheaper
     \end{itemize}
 \end{itemize}
-\vspace{0.2cm}
-\footnotesize Pricing references: \url{https://openai.com/api/pricing/}
+
 \end{frame}
+
+\begin{frame}{Real-world pricing examples}
+\textbf{Example (OpenAI GPT-4.1 family; per 1M tokens)}\vspace{0.2cm}
+
+\begin{center}
+	
+
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Model} & \textbf{Input} & \textbf{Output} \\
+\hline
+GPT-5.2 & \$1.75 & \$14.00 \\
+GPT-4.1 & \$2.00 & \$8.00 \\
+GPT-4.1 mini & \$0.40 & \$1.60 \\
+GPT-4.1 nano & \$0.10 & \$0.40 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\footnotesize Source: \url{https://platform.openai.com/docs/pricing}
+\end{frame}
+
 
 \begin{frame}{Cost math (simple model)}
 \begin{itemize}
@@ -317,296 +485,35 @@
 \footnotesize Pricing references: \url{https://openai.com/api/pricing/}
 \end{frame}
 
-\begin{frame}{Real-world pricing examples (text)}
-\textbf{Example (OpenAI GPT-4.1 family; per 1M tokens)}\vspace{0.2cm}
 
-\begin{tabular}{|l|r|r|}
-\hline
-\textbf{Model} & \textbf{Input} & \textbf{Output} \\
-\hline
-GPT-4.1 & \$2.00 & \$8.00 \\
-GPT-4.1 mini & \$0.40 & \$1.60 \\
-GPT-4.1 nano & \$0.10 & \$0.40 \\
-\hline
-\end{tabular}
+\section{Exercise}
 
-\vspace{0.4cm}
+\begin{frame}{Exercise}
+	The goal for today is:
 \begin{itemize}
-    \item Decision implication: use smaller/cheaper models for simpler tasks (classification, routing, QC), reserve larger models for harder steps
+\item Team up with another person (min group 2, max group 3)	
+\item Get access to your API Keys	
+\item Verify that you can use the keys
+\item Complete the notebook. Can you engineer the context to get all the webpages to be classified correctly?!?
 \end{itemize}
-\vspace{0.2cm}
-\footnotesize Source: \url{https://openai.com/index/gpt-4-1/}
-\end{frame}
-
-\begin{frame}{Multimodal pricing: what changes?}
-\begin{itemize}
-    \item Multimodal models may price \textbf{each modality differently}:
-    \begin{itemize}
-        \item text tokens (input/output)
-        \item image generation (often priced by image or image tokens)
-        \item audio tokens (speech in/out) and realtime usage
-        \item video generation (often priced per second/resolution)
-    \end{itemize}
-    \item Decision implication:
-    \begin{itemize}
-        \item use multimodal only when it adds value (OCR, visual QA, audio transcription)
-        \item consider hybrid pipelines (cheap OCR $\rightarrow$ text-only LLM) to control cost
-    \end{itemize}
-\end{itemize}
-\vspace{0.2cm}
-\footnotesize Pricing references: \url{https://openai.com/api/pricing/} \; and \url{https://platform.openai.com/docs/pricing}
-\end{frame}
-
-\begin{frame}{LLM Limitations}
-While LLMs are powerful, they have important limitations:
-\begin{enumerate}
-    \item \textbf{Knowledge Cutoff}: They only know information from their training data up to a certain date
-    \item \textbf{Hallucination}: They can generate plausible-sounding but incorrect information
-    \item \textbf{No Real-World Actions}: They can't directly interact with external systems (databases, APIs, file systems)
-    \item \textbf{Context Limits}: They have maximum context window sizes
-    \item \textbf{Static Knowledge}: They can't learn new information after training without fine-tuning or retrieval
-\end{enumerate}
-\end{frame}
-
-\section{Part 2: AI Agents}
-
-\begin{frame}{What is an AI Agent?}
-\begin{itemize}
-    \item An \textbf{AI Agent} is an LLM that can use \textbf{tools} to interact with the outside world
-    \item While a basic LLM can only generate text based on its training data, an agent can:
-    \begin{itemize}
-        \item Query databases
-        \item Call APIs
-        \item Read files
-        \item Execute code
-        \item Search the web
-        \item Perform actions in real-time
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{LLM vs Agent: Key Differences}
-\begin{table}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Aspect} & \textbf{LLM} & \textbf{Agent} \\
-\hline
-Capabilities & Text generation only & Text + tool usage \\
-\hline
-Knowledge & Training data only & Training data + real-time data \\
-\hline
-Actions & None & Can perform actions via tools \\
-\hline
-Interactivity & One-shot responses & Can loop and iterate \\
-\hline
-\end{tabular}
-\end{table}
-\end{frame}
-
-\begin{frame}{The Agent Loop}
-\begin{center}
-\Large
-Observe $\rightarrow$ Think $\rightarrow$ Act $\rightarrow$ Observe $\rightarrow$ \ldots
-\end{center}
-\vspace{1cm}
-\begin{enumerate}
-    \item \textbf{Observe}: Receive input (user query, tool results, system state)
-    \item \textbf{Think}: Process information and decide what to do next
-    \item \textbf{Act}: Execute actions (call tools, generate responses)
-    \item \textbf{Observe}: See the results and continue the loop
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{Example Agent Systems}
-\begin{itemize}
-    \item \textbf{LangChain Agents}
-    \begin{itemize}
-        \item Framework for building LLM applications
-        \item Supports multiple LLM providers
-        \item Tool integration and agent orchestration
-    \end{itemize}
-    \item \textbf{Claude with MCP} (Model Context Protocol)
-    \begin{itemize}
-        \item Claude Desktop can connect to MCP servers
-        \item Access custom tools and data sources
-    \end{itemize}
-    \item \textbf{ChatGPT with Plugins/Code Interpreter}
-    \item \textbf{Cursor AI}
-\end{itemize}
-\end{frame}
-
-\section{Part 3: Tools}
-
-\begin{frame}{What is a Tool?}
-\begin{itemize}
-    \item A \textbf{tool} is a function that an AI agent can call to interact with external systems
-    \item Tools bridge the gap between the LLM's text generation capabilities and real-world actions
-    \item Every tool has:
-    \begin{enumerate}
-        \item \textbf{Name}: A unique identifier (e.g., \texttt{get\_player\_list})
-        \item \textbf{Description}: What the tool does and when to use it
-        \item \textbf{Input Schema}: Parameters the tool accepts (JSON Schema format)
-        \item \textbf{Implementation}: The actual code that executes when called
-    \end{enumerate}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Common Tool Categories}
-\begin{itemize}
-    \item \textbf{Database Tools}: Query databases, insert/update/delete records
-    \item \textbf{API Tools}: Call REST APIs, interact with web services
-    \item \textbf{File System Tools}: Read/write files, list directories
-    \item \textbf{Code Execution Tools}: Run Python code, execute shell commands
-    \item \textbf{Web Tools}: Search the web, scrape websites
-\end{itemize}
-\end{frame}
-
-\section{Part 4: Model Context Protocol (MCP)}
-
-\begin{frame}{What is MCP?}
-\begin{itemize}
-    \item The \textbf{Model Context Protocol (MCP)} is an open protocol created by Anthropic
-    \item Enables AI assistants to securely connect to external tools and data sources
-    \item Provides a standardized way for AI assistants to discover and use capabilities from external systems
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Why MCP?}
-\begin{itemize}
-    \item Before MCP, each AI assistant had its own way of connecting to external tools:
-    \begin{itemize}
-        \item ChatGPT had plugins
-        \item Claude had custom integrations
-        \item Each system was proprietary
-    \end{itemize}
-    \item MCP provides:
-    \begin{itemize}
-        \item \textbf{Standardization}: One protocol works across multiple AI assistants
-        \item \textbf{Security}: Secure, controlled access to tools
-        \item \textbf{Discoverability}: AI assistants can discover available tools automatically
-        \item \textbf{Composability}: Tools can be combined and chained together
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{MCP Architecture}
-\begin{center}
-\Large
-AI Assistant (MCP Client) \\
-$\downarrow$ \\
-MCP Protocol \\
-$\downarrow$ \\
-MCP Server \\
-$\downarrow$ \\
-Your Application (Flask API, Database, File System)
-\end{center}
-\end{frame}
-
-\begin{frame}{Key MCP Components}
-\begin{enumerate}
-    \item \textbf{MCP Server}: Exposes capabilities (tools, resources, prompts) to AI assistants
-    \item \textbf{MCP Client}: AI assistant that connects to servers (Claude Desktop, Cursor, etc.)
-    \item \textbf{Tools}: Functions that an AI can call to interact with external systems
-    \item \textbf{Resources}: Data sources that an AI can read (files, database tables, API endpoints)
-    \item \textbf{Prompts}: Pre-defined prompt templates for common tasks
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{How MCP Works}
-\begin{enumerate}
-    \item User asks: "Get me all players"
-    \item MCP Client analyzes query and selects appropriate tool
-    \item Client calls tool: \texttt{get\_player\_list()}
-    \item MCP Server makes HTTP request to Flask API
-    \item API returns player data
-    \item Server returns tool result to client
-    \item Client incorporates result into response
-    \item User receives: "Here are all the players: \ldots"
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{Why not a REST API?}
-\begin{itemize}
-    \item MCP uses \textbf{Server-Sent Events (SSE)} for real-time communication
-    \item \textbf{REST}: One request $\rightarrow$ wait $\rightarrow$ one response $\rightarrow$ connection closes
-    \item \textbf{MCP/SSE}: Long-lived connection $\rightarrow$ multiple messages $\rightarrow$ streaming updates
-    \item This enables:
-    \begin{itemize}
-        \item Real-time feedback during tool execution
-        \item Streaming responses for long operations
-        \item Continuous communication between client and server
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\section{Part 5: Claude Skills}
-
-\begin{frame}{What are Claude Skills?}
-\begin{itemize}
-    \item \textbf{Claude Skills} (also called "Actions" or "Tool Use") is Claude's built-in capability to use tools
-    \item When you give Claude access to tools, it can:
-    \begin{itemize}
-        \item Automatically decide when to use tools
-        \item Call multiple tools in sequence
-        \item Combine tool results into coherent responses
-    \end{itemize}
-    \item Claude Skills work with:
-    \begin{itemize}
-        \item MCP servers (via Claude Desktop)
-        \item Custom API integrations
-        \item Function calling (via Anthropic API)
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-\section{Part 6: How Everything Works Together}
-
-\begin{frame}{Complete System Architecture}
-\begin{center}
-\Large
-User Interface \\
-$\downarrow$ \\
-AI Assistant Layer (Claude Desktop) \\
-$\downarrow$ \\
-MCP Protocol Layer \\
-$\downarrow$ \\
-MCP Server Layer \\
-$\downarrow$ \\
-Application Layer (Flask API, Database, File System)
-\end{center}
-\end{frame}
-
-\begin{frame}{Example: Complete Interaction Flow}
-\textbf{Scenario}: User asks "What colleges do players from Washington come from?"
-\begin{enumerate}
-    \item Claude analyzes query, identifies need for player data
-    \item Selects \texttt{get\_players} tool
-    \item Calls \texttt{get\_players(team="WAS")}
-    \item MCP Server makes GET request to Flask API
-    \item API queries database
-    \item Returns player records
-    \item Claude processes data, extracts unique colleges
-    \item Returns formatted response to user
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{Summary}
-\begin{itemize}
-    \item \textbf{LLMs} are powerful text generation systems trained on massive datasets
-    \item \textbf{AI Agents} extend LLMs with tool-using capabilities
-    \item \textbf{Tools} bridge the gap between LLMs and real-world systems
-    \item \textbf{MCP} provides a standardized protocol for connecting AI assistants to external tools
-    \item Together, these technologies enable AI systems that can interact with the real world
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Questions?}
-\begin{center}
-\Large
-Thank you!
-\end{center}
 \end{frame}
 
 \end{document}
+
+\begin{frame}{How do we control these models?}
+\begin{itemize}
+    \item \textbf{Temperature}: A parameter that controls randomness (Lower = more deterministic, Higher = more creative)
+    \item \textbf{Fine-tuning}: Training an LLM on specific data to improve performance on particular tasks
+    \item \textbf{Inference}: The process of generating text from an LLM (as opposed to training)
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
 

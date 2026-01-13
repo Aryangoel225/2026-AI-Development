@@ -1,7 +1,8 @@
 """Utility functions for OpenRouter API interactions."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import httpx
+import json
 
 # API Configuration
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -71,7 +72,8 @@ def chat_completion(
     messages: List[Dict[str, str]],
     base_url: str = BASE_URL,
     temperature: float = 0.7,
-    max_tokens: int = 500
+    max_tokens: int = 500,
+    response_format: Dict[str, str] = None
 ) -> Dict[str, Any]:
     """
     Make a chat completion request to OpenRouter.
@@ -83,6 +85,7 @@ def chat_completion(
         base_url: Base URL for OpenRouter API
         temperature: Sampling temperature
         max_tokens: Maximum tokens to generate
+        response_format: Optional dict for structured output, e.g. {"type": "json_object"}
     
     Returns:
         Dict with keys: model, content, error (if any), usage (token counts)
@@ -98,6 +101,8 @@ def chat_completion(
         "temperature": temperature,
         "max_tokens": max_tokens,
     }
+    if response_format:
+        payload["response_format"] = response_format
     
     with httpx.Client(timeout=60) as client:
         try:
@@ -110,9 +115,20 @@ def chat_completion(
             content = message.get("content", "")
             usage = data.get("usage", {})
             
+            # If JSON mode was requested, try to parse the content automatically
+            parsed_content = None
+            if response_format and response_format.get("type") == "json_object":
+                try:
+                    parsed_content = json.loads(content)
+                except json.JSONDecodeError:
+                    # If parsing fails, parsed_content stays None
+                    # The raw content is still available
+                    pass
+            
             return {
                 "model": model,
-                "content": content,
+                "content": content,  # Always return raw string content
+                "parsed_content": parsed_content,  # Parsed JSON if response_format was json_object
                 "usage": usage,
                 "error": None
             }
