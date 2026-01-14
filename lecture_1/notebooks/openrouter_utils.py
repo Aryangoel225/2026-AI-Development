@@ -3,6 +3,7 @@
 from typing import Any, Dict, List, Optional
 import httpx
 import json
+import pandas as pd
 
 # API Configuration
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -187,8 +188,6 @@ def safe_chat(
 
 def display_comparison(results_df, prompt_name: str) -> None:
     """Display responses from all models for a given prompt."""
-    import pandas as pd
-    
     subset = results_df[results_df["prompt"] == prompt_name]
     
     print(f"\n{'='*70}")
