@@ -103,7 +103,7 @@ This is the \textbf{complete problem}, but where do we start?
 \begin{frame}{Inputs and Outputs: The Missing Piece}
 \textbf{For each system component, we need to define:}
 \begin{itemize}
-    \item \textbf{Load Data}: What format? CSV? Excel? APIs?
+    \item \textbf{Load Data}: What format for each column? How to handle dates? Any transformations?
     \item \textbf{Clean Data}: What cleaning steps? How do we handle missing values?
     \item \textbf{Run Regression}: What type? Linear? Time series?
     \item \textbf{Present Output}: Table? Graph? JSON? What metrics?
@@ -171,13 +171,13 @@ We want to start with a \textbf{vertical slice}.
 \begin{frame}{Vertical Slice: Regression Example}
 \begin{center}
 \begin{tikzpicture}[
-  box/.style={rectangle, draw, thick, minimum width=4.5cm, minimum height=1cm, text centered},
+  box/.style={rectangle, draw, thick, minimum width=4.5cm, minimum height=1cm, text centered, align=center},
   arrow/.style={->, thick, >=Stealth}
 ]
-  \node[box, fill=blue!20] (load) at (0,0) {Load 1 Dataset \\ \small (1 country only)};
-  \node[box, fill=blue!20] (clean) at (0,-1.5) {Clean 1 Dataset \\ \small (drop broken years)};
-  \node[box, fill=blue!20] (regress) at (0,-3) {Run 1 Regression \\ \small (no robustness checks)};
-  \node[box, fill=blue!20] (present) at (0,-4.5) {Present $R^2$ Only \\ \small (simplest output)};
+  \node[box, fill=blue!20] (load) at (0,0) {Load 1 Dataset \\ {\small (1 country only)}};
+  \node[box, fill=blue!20] (clean) at (0,-1.5) {Clean 1 Dataset \\ {\small (drop broken years)}};
+  \node[box, fill=blue!20] (regress) at (0,-3) {Run 1 Regression \\ {\small (no robustness checks)}};
+  \node[box, fill=blue!20] (present) at (0,-4.5) {Present $R^2$ Only \\ {\small (simplest output)}};
 
   \draw[arrow] (load) -- (clean);
   \draw[arrow] (clean) -- (regress);
@@ -217,7 +217,6 @@ We want to start with a \textbf{vertical slice}.
         \item \textbf{Clear input contract}: What data does it expect? In what format?
         \item \textbf{Clear output contract}: What data does it return? In what format?
         \item \textbf{Single responsibility}: Does one thing well
-        \item \textbf{Testability}: Can be tested independently
     \end{enumerate}
     \vspace{0.3cm}
     \item \textbf{Benefits:}
@@ -331,7 +330,8 @@ We want to start with a \textbf{vertical slice}.
   \item We have been hired by a company to help with their software developer hiring process
   \item Our goal is to build an AI-assisted resume scoring system
   \item For each resume, we want to score it so that we don't waste time on resumes we are unlikely to hire
-  \item We are also cost conscious
+  \item We are also cost conscious.
+  \item Scores should be on a 0-100 scale.
 \end{itemize}
 \end{frame}
 
@@ -341,28 +341,56 @@ We want to start with a \textbf{vertical slice}.
 \item What's our vertical slice?
 \item What are the system components?
 \item What are the inputs and outputs?
+\item How much will our decisions cost?
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Practical Example: Resume Screening System}
+\begin{frame}{Let's Look at Our Inputs}
+\begin{itemize}
+	\item \textbf{Data}: \texttt{resumes\_final.csv} has one row per resume (anonymized, taken from Kaggle)
+	\item \textbf{Functions}: Our notebook has two functions already:
+	\begin{enumerate}
+		\item \texttt{load\_resumes()} - loads all the resumes into a dictionary
+		\item \texttt{analyze\_resume()} - runs a prompt against a resume with structured output
+	\end{enumerate}
+	\item There are two job reqs in the directory also: \texttt{job\_req\_senior.md} and \texttt{job\_req\_junior.md}
+	\item Start with \textbf{Senior}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Define our system}
+\begin{itemize}
+\item Do we have a good definition of each component?
+\item Do we know the inputs and outputs and what has to happen inside each system?
+\end{itemize}
+\vspace{0.5cm}
+
+\begin{center}
+\fcolorbox{blue!80}{blue!10}{%
+\begin{minipage}{0.8\textwidth}
+\centering
+\large\textbf{Next Step: Crawling!}
+
+\normalsize Start with the simplest possible version
+\end{minipage}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}{Resume Screening System: Crawl, Walk, Run}
 \textbf{Phase 1: Vertical Slice (Crawl)}
-\begin{enumerate}
-    \item Load one resume text
-    \item Call LLM to extract skills
-    \item Compare to job requirements
-    \item Print result
-\end{enumerate}
+\begin{itemize}
+\item Generate Score for a Single Resume for a single Job Req
+\end{itemize}
 \vspace{0.3cm}
 \textbf{Phase 2: Horizontal Expansion (Walk)}
 \begin{itemize}
-    \item Process all resumes in a directory
-    \item Add structured output (JSON, CSV)
-    \item Add confidence scores
-    \item Handle missing data gracefully
+\item Generate Score for \textbf{most} resumes for a single Job Req
 \end{itemize}
 \vspace{0.3cm}
 \textbf{Phase 3: Production (Run)}
 \begin{itemize}
+	\item Work on \textbf{all} resumes for \textbf{all} job reqs
     \item Optimize prompts and costs
     \item Add caching for repeated skills
     \item Add human-in-the-loop review
@@ -370,26 +398,45 @@ We want to start with a \textbf{vertical slice}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Design Exercise: Break Into Pieces}
-Given the task: \textit{``Build a system to screen IT resumes for a job opening''}
-\vspace{0.3cm}
+\begin{frame}{Next Steps: Hands-On Practice}
+\begin{columns}[T]
+\begin{column}{0.65\textwidth}
+\textbf{Goal}: Build a working resume scorer
+\vspace{0.2cm}
 
-\textbf{What are the system pieces?}
-\pause
+\textbf{Your Task}:
 \begin{enumerate}
-    \item \textbf{Input}: Resume PDF/text files, job requirements
-    \item \textbf{Parse}: Extract text from PDFs
-    \item \textbf{Extract}: Identify skills/technologies from resume
-    \item \textbf{Match}: Compare skills to job requirements
-    \item \textbf{Score}: Calculate fit score
-    \item \textbf{Rank}: Sort candidates by score
-    \item \textbf{Output}: Ranked list with justifications
+    \item \textbf{Form teams} (2-3 people)
+    \item \textbf{Open the notebook}: \texttt{resume\_screening.ipynb}
+    \item \textbf{Work through the examples}:
+    \begin{itemize}
+        \item Load resume data
+        \item Use structured outputs to extract information
+        \item Match resumes to job requirements
+    \end{itemize}
+    \item \textbf{Key questions to answer}:
+    \begin{itemize}
+        \item Can we create a score (0-100)?
+        \item How do we do that?
+        \item What prompt and schema do we need?
+        \item How much does it cost per resume?
+    \end{itemize}
 \end{enumerate}
+\end{column}
+
+\begin{column}{0.30\textwidth}
+\vspace{1cm}
+\fcolorbox{orange!80}{orange!10}{%
+\begin{minipage}{\textwidth}
+\centering
+\large\textbf{Focus on the Crawl First!}
+
 \vspace{0.3cm}
-\pause
-\textbf{Which piece should we build first?}\\
-\pause
-$\rightarrow$ The middle pieces (Extract + Match), using sample data!
+\normalsize Start simple, prove it works
+\end{minipage}
+}
+\end{column}
+\end{columns}
 \end{frame}
 
 \end{document}
