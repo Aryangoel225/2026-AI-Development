@@ -28,6 +28,20 @@ def load_resumes(csv_path: str) -> Dict[str, Dict[str, str]]:
     return resumes
 
 
+def load_job_description(file_path: str) -> str:
+    """
+    Load job description from a markdown file.
+
+    Args:
+        file_path: Path to the job description markdown file
+
+    Returns:
+        String containing the full job description text
+    """
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return f.read()
+
+
 def analyze_resume(
     api_key: str,
     prompt: str,
